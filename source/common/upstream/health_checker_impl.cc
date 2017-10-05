@@ -41,6 +41,8 @@ HealthCheckerSharedPtr HealthCheckerFactory::create(const envoy::api::v2::Health
   case envoy::api::v2::HealthCheck::HealthCheckerCase::kRedisHealthCheck:
     return std::make_shared<RedisHealthCheckerImpl>(cluster, hc_config, dispatcher, runtime, random,
                                                     Redis::ConnPool::ClientFactoryImpl::instance_);
+  case envoy::api::v2::HealthCheck::HealthCheckerCase::kGrpcHealthCheck:
+    return std::make_shared<GrpcHealthCheckerImpl>(cluster, hc_config, dispatcher, runtime, random);
   default:
     // TODO(htuch): This should be subsumed eventually by the constraint checking in #1308.
     throw EnvoyException("Health checker type not set");
@@ -570,6 +572,29 @@ RedisHealthCheckerImpl::HealthCheckRequest::HealthCheckRequest() {
   values[0].asString() = "PING";
   request_.type(Redis::RespType::Array);
   request_.asArray().swap(values);
+}
+
+GrpcHealthCheckerImpl::GrpcHealthCheckerImpl(const Cluster& cluster,
+                                             const envoy::api::v2::HealthCheck& config,
+                                             Event::Dispatcher& dispatcher,
+                                             Runtime::Loader& runtime,
+                                             Runtime::RandomGenerator& random)
+    : HealthCheckerImplBase(cluster, config, dispatcher, runtime, random) {}
+
+GrpcHealthCheckerImpl::~GrpcHealthCheckerImpl() {
+}
+
+GrpcHealthCheckerImpl::Session::Session(HealthCheckerImplBase& parent, HostSharedPtr host)
+    : ActiveHealthCheckSession(parent, host) {
+}
+
+GrpcHealthCheckerImpl::Session::~Session() {
+}
+
+void GrpcHealthCheckerImpl::Session::onInterval() {
+}
+
+void GrpcHealthCheckerImpl::Session::onTimeout() {
 }
 
 } // namespace Upstream

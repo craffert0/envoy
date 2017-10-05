@@ -1070,6 +1070,13 @@ TEST_F(RedisHealthCheckerImplTest, All) {
   EXPECT_EQ(2UL, cluster_->info_->stats_store_.counter("health_check.network_failure").value());
 }
 
+class GrpcHealthCheckerImplTest : public testing::Test {
+};
+
+TEST_F(GrpcHealthCheckerImplTest, math) {
+  EXPECT_EQ(4, 2 + 2) << "math class is hard";
+}
+
 } // namespace
 } // namespace Upstream
 } // namespace Envoy
