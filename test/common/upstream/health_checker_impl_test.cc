@@ -67,6 +67,28 @@ TEST(HealthCheckerFactoryTest, createRedis) {
                              .get()));
 }
 
+TEST(HealthCheckerFactoryTest, createGrpc) {
+  std::string json = R"EOF(
+  {
+    "type": "grpc",
+    "timeout_ms": 1000,
+    "interval_ms": 1000,
+    "unhealthy_threshold": 1,
+    "healthy_threshold": 1
+  }
+  )EOF";
+
+  NiceMock<Upstream::MockCluster> cluster;
+  Runtime::MockLoader runtime;
+  Runtime::MockRandomGenerator random;
+  Event::MockDispatcher dispatcher;
+  EXPECT_NE(nullptr, dynamic_cast<GrpcHealthCheckerImpl*>(
+                         HealthCheckerFactory::create(parseHealthCheckFromJson(json), cluster,
+                                                      runtime, random, dispatcher)
+                             .get()));
+}
+
+
 // TODO(htuch): This provides coverage on MissingFieldException and missing health check type
 // handling for HealthCheck construction, but should eventually be subsumed by whatever we do for
 // #1308.

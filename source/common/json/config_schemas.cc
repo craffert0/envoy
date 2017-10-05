@@ -1316,7 +1316,7 @@ const std::string Json::Schema::CLUSTER_HEALTH_CHECK_SCHEMA(R"EOF(
     "properties" : {
       "type" : {
         "type" : "string",
-        "enum" : ["http", "redis", "tcp"]
+        "enum" : ["grpc", "http", "redis", "tcp"]
       },
       "timeout_ms" : {
         "type" : "integer",
