@@ -4,6 +4,7 @@ load(
     "//bazel:envoy_build_system.bzl",
     "envoy_cc_library",
     "envoy_package",
+    "envoy_proto_library",
 )
 
 envoy_package()
@@ -88,6 +89,7 @@ envoy_cc_library(
     hdrs = ["health_checker_impl.h"],
     external_deps = ["envoy_health_check"],
     deps = [
+        ":health_proto",
         ":host_utility_lib",
         "//include/envoy/event:dispatcher_interface",
         "//include/envoy/event:timer_interface",
@@ -112,6 +114,11 @@ envoy_cc_library(
         "//source/common/protobuf:utility_lib",
         "//source/common/redis:conn_pool_lib",
     ],
+)
+
+envoy_proto_library(
+    name = "health_proto",
+    srcs = ["health.proto"],
 )
 
 envoy_cc_library(
