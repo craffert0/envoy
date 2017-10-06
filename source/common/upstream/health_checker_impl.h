@@ -415,31 +415,5 @@ private:
   Redis::ConnPool::ClientFactory& client_factory_;
 };
 
-/**
- * Redis health checker implementation. Sends PING and expects PONG.
- */
-class GrpcHealthCheckerImpl : public HealthCheckerImplBase {
-public:
-  GrpcHealthCheckerImpl(const Cluster& cluster, const envoy::api::v2::HealthCheck& config,
-                        Event::Dispatcher& dispatcher, Runtime::Loader& runtime,
-                        Runtime::RandomGenerator& random);
-  ~GrpcHealthCheckerImpl();
-
-private:
-  struct Session : public ActiveHealthCheckSession {
-  public:
-    Session(HealthCheckerImplBase& parent, HostSharedPtr host);
-    ~Session() override;
-
-  private:
-    void onInterval() override;
-    void onTimeout() override;
-  };
-
-  ActiveHealthCheckSessionPtr makeSession(HostSharedPtr host) override {
-    return ActiveHealthCheckSessionPtr{new Session(*this, host)};
-  }
-};
-
 } // namespace Upstream
 } // namespace Envoy

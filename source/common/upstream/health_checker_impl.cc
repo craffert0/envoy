@@ -22,6 +22,7 @@
 #include "common/http/utility.h"
 #include "common/protobuf/utility.h"
 #include "common/redis/conn_pool_impl.h"
+#include "common/upstream/grpc_health_checker_impl.h"
 #include "common/upstream/host_utility.h"
 #include "common/upstream/health.pb.h"
 
@@ -573,29 +574,6 @@ RedisHealthCheckerImpl::HealthCheckRequest::HealthCheckRequest() {
   values[0].asString() = "PING";
   request_.type(Redis::RespType::Array);
   request_.asArray().swap(values);
-}
-
-GrpcHealthCheckerImpl::GrpcHealthCheckerImpl(const Cluster& cluster,
-                                             const envoy::api::v2::HealthCheck& config,
-                                             Event::Dispatcher& dispatcher,
-                                             Runtime::Loader& runtime,
-                                             Runtime::RandomGenerator& random)
-    : HealthCheckerImplBase(cluster, config, dispatcher, runtime, random) {}
-
-GrpcHealthCheckerImpl::~GrpcHealthCheckerImpl() {
-}
-
-GrpcHealthCheckerImpl::Session::Session(HealthCheckerImplBase& parent, HostSharedPtr host)
-    : ActiveHealthCheckSession(parent, host) {
-}
-
-GrpcHealthCheckerImpl::Session::~Session() {
-}
-
-void GrpcHealthCheckerImpl::Session::onInterval() {
-}
-
-void GrpcHealthCheckerImpl::Session::onTimeout() {
 }
 
 } // namespace Upstream

@@ -85,8 +85,14 @@ envoy_cc_library(
 
 envoy_cc_library(
     name = "health_checker_lib",
-    srcs = ["health_checker_impl.cc"],
-    hdrs = ["health_checker_impl.h"],
+    srcs = [
+        "grpc_health_checker_impl.cc",
+        "health_checker_impl.cc"
+    ],
+    hdrs = [
+        "grpc_health_checker_impl.h",
+        "health_checker_impl.h"
+    ],
     external_deps = ["envoy_health_check"],
     deps = [
         ":health_proto",
