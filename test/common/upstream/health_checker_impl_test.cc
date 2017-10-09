@@ -10,6 +10,7 @@
 #include "common/network/utility.h"
 #include "common/protobuf/utility.h"
 #include "common/upstream/grpc_health_checker_impl.h"
+#include "common/upstream/health.pb.h"
 #include "common/upstream/health_checker_impl.h"
 #include "common/upstream/upstream_impl.h"
 
@@ -88,7 +89,6 @@ TEST(HealthCheckerFactoryTest, createGrpc) {
                                                       runtime, random, dispatcher)
                              .get()));
 }
-
 
 // TODO(htuch): This provides coverage on MissingFieldException and missing health check type
 // handling for HealthCheck construction, but should eventually be subsumed by whatever we do for
@@ -1098,6 +1098,14 @@ class GrpcHealthCheckerImplTest : public testing::Test {
 
 TEST_F(GrpcHealthCheckerImplTest, math) {
   EXPECT_EQ(4, 2 + 2) << "math class is hard";
+}
+
+TEST_F(GrpcHealthCheckerImplTest, healthCheckServiceExists) {
+  // must instantiate something to register service.
+  grpc::health::v1::HealthCheckRequest req;
+  EXPECT_NE(nullptr,
+            Protobuf::DescriptorPool::generated_pool()->FindMethodByName("grpc.health.v1.Health.Check"))
+    << "We ought to have the expected RPC.";
 }
 
 } // namespace
