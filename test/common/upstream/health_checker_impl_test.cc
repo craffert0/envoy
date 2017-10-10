@@ -1108,6 +1108,31 @@ TEST_F(GrpcHealthCheckerImplTest, healthCheckServiceExists) {
     << "We ought to have the expected RPC.";
 }
 
+TEST_F(GrpcHealthCheckerImplTest, remoteClientServiceSucceeds) {
+  // TODO(crafferty)
+  // HealthCheckResponse.status == SERVING
+}
+
+TEST_F(GrpcHealthCheckerImplTest, remoteClientNotServiceFails) {
+  // TODO(crafferty)
+  // HealthCheckResponse.status == NOT_SERVING;
+}
+
+TEST_F(GrpcHealthCheckerImplTest, remoteClientUnknownServiceFails) {
+  // TODO(crafferty)
+  // HealthCheckResponse.status == UNKNOWN;
+}
+
+TEST_F(GrpcHealthCheckerImplTest, remoteClientBadResponseFails) {
+  // TODO(crafferty)
+  // not grpc endpoint
+}
+
+TEST_F(GrpcHealthCheckerImplTest, remoteClientDownFails) {
+  // TODO(crafferty)
+  // not listening to port
+}
+
 } // namespace
 } // namespace Upstream
 } // namespace Envoy
