@@ -19,6 +19,8 @@ private:
   struct Session;
 
   ActiveHealthCheckSessionPtr makeSession(HostSharedPtr host) override;
+
+  const std::string service_name_;
 };
 
 } // namespace Upstream

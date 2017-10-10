@@ -76,7 +76,8 @@ TEST(HealthCheckerFactoryTest, createGrpc) {
     "timeout_ms": 1000,
     "interval_ms": 1000,
     "unhealthy_threshold": 1,
-    "healthy_threshold": 1
+    "healthy_threshold": 1,
+    "service_name": "test_service"
   }
   )EOF";
 

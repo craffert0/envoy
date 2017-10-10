@@ -41,7 +41,10 @@ void CdsJson::translateHealthCheck(const Json::Object& json_health_check,
       tcp_health_check->mutable_receive()->Add()->set_text(hex_string);
     }
   } else if (hc_type == "grpc") {
-    /* auto* grpc_health_check = */ health_check.mutable_grpc_health_check();
+    auto* grpc_health_check = health_check.mutable_grpc_health_check();
+    if (json_health_check.hasObject("service_name")) {
+      grpc_health_check->set_service_name(json_health_check.getString("service_name"));
+    }
   } else {
     ASSERT(hc_type == "redis");
     health_check.mutable_redis_health_check();

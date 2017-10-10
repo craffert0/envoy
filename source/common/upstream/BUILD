@@ -112,6 +112,7 @@ envoy_cc_library(
         "//source/common/common:hex_lib",
         "//source/common/common:logger_lib",
         "//source/common/common:utility_lib",
+        "//source/common/grpc:async_client_lib",
         "//source/common/http:codec_client_lib",
         "//source/common/http:header_map_lib",
         "//source/common/http:headers_lib",
