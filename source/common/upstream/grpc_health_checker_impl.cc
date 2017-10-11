@@ -8,18 +8,31 @@ namespace Upstream {
 
 using RequestType = grpc::health::v1::HealthCheckRequest;
 using ResponseType = grpc::health::v1::HealthCheckResponse;
+using ClientType = Grpc::AsyncClient<RequestType, ResponseType>;
+using ClientTypePtr = std::unique_ptr<ClientType>;
 using StreamType = Grpc::AsyncStream<RequestType>;
+
+namespace {
+
+RequestType makeRequest(const std::string& service_name) {
+  RequestType request;
+  request.set_service(service_name);
+  return request;
+}
+
+ClientTypePtr makeClient(HostSharedPtr host) {
+  return host ? nullptr : nullptr; // TODO(crafferty)
+}
+
+} // unnamed
 
 struct GrpcHealthCheckerImpl::Session : public ActiveHealthCheckSession,
                                         private Grpc::AsyncStreamCallbacks<ResponseType> {
 public:
   Session(GrpcHealthCheckerImpl& parent, HostSharedPtr host)
       : ActiveHealthCheckSession(parent, host),
-        request_([&]() {
-            RequestType request;
-            request.set_service(parent.service_name_);
-            return request;
-          }()) {
+        client_(makeClient(host)),
+        request_(makeRequest(parent.service_name_)) {
   }
 
   ~Session() override {
@@ -32,7 +45,10 @@ private:
   // ActiveHealthCheckSession
   void onInterval() override {
     if (!stream_) {
-      // TODO(crafferty): create stream
+      static const auto* const service_method =
+        Protobuf::DescriptorPool::generated_pool()->FindMethodByName(
+            "grpc.health.v1.Health.Check");
+      stream_ = client_->start(*service_method, *this);
       expect_close_ = false;
     }
     stream_->sendMessage(request_, false);
@@ -71,6 +87,7 @@ private:
     }
   }
 
+  ClientTypePtr client_;
   const RequestType request_;
   StreamType* stream_{};
   bool expect_close_{};
