@@ -14,14 +14,36 @@ using StreamType = Grpc::AsyncStream<RequestType>;
 
 namespace {
 
+class FakeClient : public ClientType {
+public:
+  explicit FakeClient(const HostSharedPtr& host)
+      : host_(host) {
+  }
+
+  Grpc::AsyncRequest* send(const Protobuf::MethodDescriptor& /*service_method*/,
+                           const RequestType& /*request*/,
+                           Grpc::AsyncRequestCallbacks<ResponseType>& /*callbacks*/,
+                           const Optional<std::chrono::milliseconds>& /*timeout*/) override {
+    return nullptr;             // TODO(crafferty)
+  }
+
+  StreamType* start(const Protobuf::MethodDescriptor& /*service_method*/,
+                    Grpc::AsyncStreamCallbacks<ResponseType>& /*callbacks*/) override {
+    return nullptr;             // TODO(crafferty)
+  }
+
+private:
+  const HostSharedPtr host_;
+};
+
 RequestType makeRequest(const std::string& service_name) {
   RequestType request;
   request.set_service(service_name);
   return request;
 }
 
-ClientTypePtr makeClient(HostSharedPtr host) {
-  return host ? nullptr : nullptr; // TODO(crafferty)
+ClientTypePtr makeClient(const HostSharedPtr& host) {
+  return host ? ClientTypePtr{new FakeClient(host)} : nullptr;
 }
 
 } // unnamed
