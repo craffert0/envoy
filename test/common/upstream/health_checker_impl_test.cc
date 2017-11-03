@@ -10,9 +10,10 @@
 #include "common/network/utility.h"
 #include "common/protobuf/utility.h"
 #include "common/upstream/grpc_health_checker_impl.h"
-#include "common/upstream/health.pb.h"
 #include "common/upstream/health_checker_impl.h"
 #include "common/upstream/upstream_impl.h"
+
+#include "source/common/upstream/health.pb.h"
 
 #include "test/common/http/common.h"
 #include "test/common/upstream/utility.h"

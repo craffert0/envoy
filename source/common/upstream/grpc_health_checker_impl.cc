@@ -1,7 +1,8 @@
 #include "common/upstream/grpc_health_checker_impl.h"
 
 #include "common/grpc/async_client_impl.h"
-#include "common/upstream/health.pb.h"
+
+#include "source/common/upstream/health.pb.h"
 
 namespace Envoy {
 namespace Upstream {
@@ -23,6 +24,7 @@ public:
   Grpc::AsyncRequest* send(const Protobuf::MethodDescriptor& /*service_method*/,
                            const RequestType& /*request*/,
                            Grpc::AsyncRequestCallbacks<ResponseType>& /*callbacks*/,
+                           Tracing::Span& /*parent_span*/,
                            const Optional<std::chrono::milliseconds>& /*timeout*/) override {
     return nullptr;             // TODO(crafferty)
   }

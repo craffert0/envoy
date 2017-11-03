@@ -24,7 +24,8 @@
 #include "common/redis/conn_pool_impl.h"
 #include "common/upstream/grpc_health_checker_impl.h"
 #include "common/upstream/host_utility.h"
-#include "common/upstream/health.pb.h"
+
+#include "source/common/upstream/health.pb.h"
 
 namespace Envoy {
 namespace Upstream {
